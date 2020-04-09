@@ -56,3 +56,5 @@ simulate <- function(n, correlation = rho){
 
 # run simulation
 result <- replicate(nsim, simulate(n = 1000), simplify = FALSE)
+
+# TODO: write evaluation code
