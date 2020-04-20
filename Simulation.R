@@ -12,20 +12,20 @@ rho = .5 # correlation
 # simulation function
 simulate <- function(n, correlation = rho){
   # sample data from multivariate normal distribution
-  data <- rmvnorm(n = n, mean = c(0, 0), 
-                  sigma = matrix(c(1, correlation, correlation, 1), 
+  data <- rmvnorm(n = n, mean = c(0, 0),
+                  sigma = matrix(c(1, correlation, correlation, 1),
                                  nrow = 2, ncol = 2))
   colnames(data) <- c("y", "x")
   data <- data %>% as_tibble()
   # ampute data
-  missing <- ampute(data, 
+  missing <- ampute(data,
                     patterns = matrix(c(0, 1), ncol = 2, nrow = 1, byrow = TRUE),
                     mech = "MCAR")
   # impute data
   imp <- mice(missing$amp, method = "norm", m = 10, maxit = 10, print = FALSE)
   # calculate true data statistics
   fit <- data %$% lm(y ~ x)
-  anova <- fit %>% anova 
+  anova <- fit %>% anova
   # calculate imputed data statistics
   fit.mis <- missing$amp %$% lm(y ~ x)
   anova.mis <- fit.mis %>% anova
@@ -45,15 +45,15 @@ simulate <- function(n, correlation = rho){
   # TODO combine p-values based on imp %>% anova
   # TODO Van Ginkel & Kroonenberg (2014)
   # prepare output for return
-  return(list(data = data, 
+  return(list(data = data,
               miss = missing,
-              imp = imp, 
+              imp = imp,
               stats = list(true = list(fit = fit, anova = anova),
                            miss = list(fit = fit.mis, anova = anova.mis),
-                           imp = list(fit = fit.imp, emptyfit = fit.imp.empty, 
-                                      D1 = fit.anova.D1, 
-                                      D2 = fit.anova.D2, 
-                                      Fbar = avg.F.imp, 
+                           imp = list(fit = fit.imp, emptyfit = fit.imp.empty,
+                                      D1 = fit.anova.D1,
+                                      D2 = fit.anova.D2,
+                                      Fbar = avg.F.imp,
                                       pbar = avg.p.imp))))
 }
 
