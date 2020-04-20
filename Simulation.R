@@ -41,6 +41,9 @@ simulate <- function(n, correlation = rho){
   #fit.anova.D3 <- D3(fit.imp, fit.imp.empty)
   avg.F.imp <- mean(unlist(with(imp, anova(lm(y ~ x))$'F value'[1])$analyses))
   avg.p.imp <- mean(unlist(with(imp, anova(lm(y ~ x))$'Pr(>F)'[1])$analyses))
+  # TODO calculate inference based on avg.F with df's
+  # TODO combine p-values based on imp %>% anova
+  # TODO Van Ginkel & Kroonenberg (2014)
   # prepare output for return
   return(list(data = data, 
               miss = missing,
@@ -56,3 +59,5 @@ simulate <- function(n, correlation = rho){
 
 # run simulation
 result <- replicate(nsim, simulate(n = 1000), simplify = FALSE)
+
+# TODO evaluation/plotting script
