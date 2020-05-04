@@ -1,41 +1,5 @@
-library(mice)
-library(miceadds)
-library(magrittr)
-library(dplyr)
-library(purrr)
-library(mvtnorm)
-set.seed(123)
-
-# Simulation parameters
-nsim = 1000
-rho = .5 # correlation
-
-# Generate data function
-make.data <- function(n, correlation){
-  data <- rmvnorm(n = n, mean = c(0, 0),
-                  sigma = matrix(c(1, correlation, correlation, 1),
-                                 nrow = 2, ncol = 2))
-  colnames(data) <- c("y", "x")
-  data %>% as_tibble() %>% return()
-}
-
-# simulation function
-simulate <- function(n, rho){
-  # sample data from multivariate normal distribution
-  data <- make.data(n = n, correlation = rho)
-  # ampute data
-  missing <- ampute(data, #ampute is a function from mice that makes missingness
-                    patterns = matrix(c(0, 1, 1, 0), ncol = 2, nrow = 2, byrow = TRUE),
-                    mech = "MCAR")
-  # impute data
-  imp <- mice(missing$amp, method = "norm", m = 10, maxit = 10, print = FALSE)
-  return(list(data = data,
-              miss = missing,
-              imp = imp))
-}
-
-# run simulation
-SIM <- replicate(nsim, simulate(n = 1000, rho = rho), simplify = FALSE)
+# Read in the simulation data
+load(file = "Workspaces/Simulations.RData")
 
 # evaluation function
 evaluate <- function(sim){
@@ -73,7 +37,10 @@ evaluate <- function(sim){
               pbar = avg.p.imp))
 }
 
-EVAL <- map(SIM, evaluate)
+EVAL01 <- map(SIM01, evaluate)
+EVAL25 <- map(SIM25, evaluate)
+EVAL50 <- map(SIM50, evaluate)
+EVAL75 <- map(SIM75, evaluate)
 
 # Grab Anova's
 grab.F <- function(x){
@@ -85,7 +52,10 @@ grab.F <- function(x){
              micombine = x$micomb[1],
              Fbar = x$Fbar)
 }
-mapply(grab.F, EVAL)
+F.out01 <- mapply(grab.F, EVAL01, SIMPLIFY = FALSE) %>% do.call(rbind, .)
+F.out25 <- mapply(grab.F, EVAL25, SIMPLIFY = FALSE) %>% do.call(rbind, .)
+F.out50 <- mapply(grab.F, EVAL50, SIMPLIFY = FALSE) %>% do.call(rbind, .)
+F.out75 <- mapply(grab.F, EVAL75, SIMPLIFY = FALSE) %>% do.call(rbind, .)
 
 # Grab p-values
 grab.p <- function(x){
@@ -97,5 +67,14 @@ grab.p <- function(x){
              micombine = x$micomb[2],
              pbar = x$pbar)
 }
-mapply(grab.p, EVAL)
-# TODO evaluation/plotting script
+p.out01 <- mapply(grab.p, EVAL01, SIMPLIFY = FALSE) %>% do.call(rbind, .)
+p.out25 <- mapply(grab.p, EVAL25, SIMPLIFY = FALSE) %>% do.call(rbind, .)
+p.out50 <- mapply(grab.p, EVAL50, SIMPLIFY = FALSE) %>% do.call(rbind, .)
+p.out75 <- mapply(grab.p, EVAL75, SIMPLIFY = FALSE) %>% do.call(rbind, .)
+
+# Save the evaluations and the resulting p-value and F-value objects
+save(list = c("EVAL01", "EVAL25", "EVAL50", "EVAL75"), 
+     file = "Workspaces/Evaluations_objects.RData")
+save(list = c("F.out01", "F.out25", "F.out50", "F.out75", 
+              "p.out01", "p.out25", "p.out50", "p.out75"), 
+     file = "Workspaces/Evaluations_processed.RData")
