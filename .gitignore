@@ -38,3 +38,5 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 Workspaces/Simulations.RData
+Workspaces/Evaluations_objects.RData
+Workspaces/Evaluations_processed.RData
