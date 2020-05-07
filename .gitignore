@@ -39,4 +39,3 @@ vignettes/*.pdf
 .Renviron
 Workspaces/Simulations.RData
 Workspaces/Evaluations_objects.RData
-Workspaces/Evaluations_processed.RData

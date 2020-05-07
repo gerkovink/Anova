@@ -66,3 +66,13 @@ cor(p.out50)[1, ]
 cor(p.out75)[1, ]
 
 # proportions correct
+sign01 <- p.out01 < .05
+sign25 <- p.out25 < .05
+sign50 <- p.out50 < .05
+sign75 <- p.out75 < .05
+
+p.correct01 <- apply(sign01, 2, function(x) mean(x == sign01[, 1]))
+p.correct25 <- apply(sign25, 2, function(x) mean(x == sign25[, 1]))
+p.correct50 <- apply(sign50, 2, function(x) mean(x == sign50[, 1]))
+p.correct75 <- apply(sign75, 2, function(x) mean(x == sign75[, 1]))
+
