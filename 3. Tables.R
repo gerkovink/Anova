@@ -64,3 +64,5 @@ cor(p.out01)[1, ]
 cor(p.out25)[1, ]
 cor(p.out50)[1, ]
 cor(p.out75)[1, ]
+
+# proportions correct

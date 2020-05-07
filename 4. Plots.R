@@ -1,17 +1,18 @@
 load(file = "Workspaces/Evaluations_processed.RData")
 library(ggplot2)
+library(gridExtra)
 
 # plot function
-qqplot <- function(x){
+qqplot <- function(x, title = "ECDF and theoretical CDF"){
   ggplot(aes(x), data = data.frame(x)) +
     stat_function(fun=punif, 
                   args=list(0, 1), 
                   col = "orange", 
                   lwd = 1.1) +
     stat_ecdf() +
-    labs(title = "ECDF and theoretical CDF") + 
+    labs(title = title) + 
     xlab("Empirical CDF") + 
-    ylab("Cumulative Distribution Function") + 
+    ylab("CDF") + 
     xlim(0, 1)
 }
 
@@ -50,3 +51,12 @@ qqplot(p.out75$D2)
 qqplot(p.out75$D3)
 qqplot(p.out75$micombine)
 qqplot(p.out75$pbar)
+
+#side by side
+p1 <- qqplot(p.out75$D1, title = "D1")
+p2 <- qqplot(p.out75$D2, title = "D2")
+p3 <- qqplot(p.out75$D3, title = "D3")
+grid.arrange(p1, p2, p3, 
+             nrow = 1, respect=TRUE, 
+             top = "ECDF and theoretical CDF")
+
