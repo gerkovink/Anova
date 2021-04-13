@@ -4,7 +4,7 @@ library(magrittr)
 library(dplyr)
 library(purrr)
 library(mvtnorm)
-library(ggplot)
+library(ggplot2)
 set.seed(123)
 
 # Simulation parameters
@@ -21,14 +21,15 @@ make.data <- function(n, correlation){
 }
 
 # simulation function
-simulate <- function(n, rho, prop.mis = .75){
+simulate <- function(n, rho, prop.mis = .75, m.mech = "MCAR", m.type = "RIGHT"){
   # sample data from multivariate normal distribution
   data <- make.data(n = n, correlation = rho)
   # ampute data
   missing <- ampute(data, #ampute is a function from mice that makes missingness
                     patterns = matrix(c(0, 1, 1, 0), ncol = 2, nrow = 2, byrow = TRUE),
                     prop = prop.mis, 
-                    mech = "MCAR")
+                    mech = m.mech, 
+                    type = m.type)
   # impute data
   imp <- mice(missing$amp, method = "norm", m = 10, maxit = 10, print = FALSE)
   return(list(data = data,
@@ -41,6 +42,11 @@ SIM01 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .01), simplify
 SIM25 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .25), simplify = FALSE)
 SIM50 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .50), simplify = FALSE)
 SIM75 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .75), simplify = FALSE)
+# run simulation
+MAR_SIM01 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .01, m.mech = "MAR"), simplify = FALSE)
+MAR_SIM25 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .25, m.mech = "MAR"), simplify = FALSE)
+MAR_SIM50 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .50, m.mech = "MAR"), simplify = FALSE)
+MAR_SIM75 <- replicate(nsim, simulate(n = 1000, rho = rho, prop.mis = .75, m.mech = "MAR"), simplify = FALSE)
 
 # save sim, functions, seed, etc as a workspace dump
 save.image(file = "Workspaces/Simulations.RData")
