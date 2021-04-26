@@ -1,0 +1,66 @@
+load(file = "Workspaces/Evaluations_processed.RData")
+library(ggplot2)
+library(gridExtra)
+
+# plot function
+qqplot <- function(x, title = "ECDF and theoretical CDF"){
+  ggplot(aes(x), data = data.frame(x)) +
+    stat_function(fun=punif,
+                  args=list(0, 1),
+                  col = "orange",
+                  lwd = 1.1) +
+    stat_ecdf() +
+    labs(title = title) +
+    xlab("Empirical CDF") +
+    ylab("CDF") +
+    xlim(0, 1)
+}
+
+# 01% missingness
+qqplot(MAR_p.out01$true)
+qqplot(MAR_p.out01$mis)
+qqplot(MAR_p.out01$D1)
+qqplot(MAR_p.out01$D2)
+qqplot(MAR_p.out01$D3)
+qqplot(MAR_p.out01$micombine)
+qqplot(MAR_p.out01$pbar)
+qqplot(MAR_p.out01$pmed)
+
+# 25% missingness
+qqplot(MAR_p.out25$true)
+qqplot(MAR_p.out25$mis)
+qqplot(MAR_p.out25$D1)
+qqplot(MAR_p.out25$D2)
+qqplot(MAR_p.out25$D3)
+qqplot(MAR_p.out25$micombine)
+qqplot(MAR_p.out25$pbar)
+qqplot(MAR_p.out25$pmed)
+
+# 50% missingness
+qqplot(MAR_p.out50$true)
+qqplot(MAR_p.out50$mis)
+qqplot(MAR_p.out50$D1)
+qqplot(MAR_p.out50$D2)
+qqplot(MAR_p.out50$D3)
+qqplot(MAR_p.out50$micombine)
+qqplot(MAR_p.out50$pbar)
+qqplot(MAR_p.out50$pmed)
+
+# 75% missingness
+qqplot(MAR_p.out75$true)
+qqplot(MAR_p.out75$mis)
+qqplot(MAR_p.out75$D1)
+qqplot(MAR_p.out75$D2)
+qqplot(MAR_p.out75$D3)
+qqplot(MAR_p.out75$micombine)
+qqplot(MAR_p.out75$pbar)
+qqplot(MAR_p.out75$pmed)
+
+#side by side MAR
+p1_MAR <- qqplot(MAR_p.out75$D1, title = "D1")
+p2_MAR <- qqplot(MAR_p.out75$D2, title = "D2")
+p3_MAR <- qqplot(MAR_p.out75$D3, title = "D3")
+p4_MAR <- qqplot(MAR_p.out75$pmed, title = "pmed")
+grid.arrange(p1_MAR, p2_MAR, p3_MAR, p4_MAR,
+             nrow = 1, respect=TRUE,
+             top = "ECDF and theoretical CDF")
