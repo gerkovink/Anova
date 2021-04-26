@@ -1,0 +1,80 @@
+
+load("Workspaces/Evaluations_processed.RData")
+
+#Test whether the p-values of MAR follow a uniform distribution
+apply(MAR_p.out01, 2, function(x) ks.test(x, "punif", 0, 1))
+apply(MAR_p.out25, 2, function(x) ks.test(x, "punif", 0, 1))
+apply(MAR_p.out50, 2, function(x) ks.test(x, "punif", 0, 1))
+apply(MAR_p.out75, 2, function(x) ks.test(x, "punif", 0, 1))
+
+# Test how many p=values <.05 (we expect .05)
+# apply(p.out25, 2, function(x) mean(x < .05))
+
+#MAR
+data.frame(mis01 = apply(MAR_p.out01, 2, function(x) mean(x < .05)),
+           mis25 = apply(MAR_p.out25, 2, function(x) mean(x < .05)),
+           mis50 = apply(MAR_p.out50, 2, function(x) mean(x < .05)),
+           mis75 = apply(MAR_p.out75, 2, function(x) mean(x < .05)))
+
+# What is the mean p-value of MCAR
+# apply(p.out, 2, function(x) mean(x))
+
+# What is the mean p-value of MAR
+data.frame(mis01 = apply(MAR_p.out01, 2, function(x) mean(x)),
+           mis25 = apply(MAR_p.out25, 2, function(x) mean(x)),
+           mis50 = apply(MAR_p.out50, 2, function(x) mean(x)),
+           mis75 = apply(MAR_p.out75, 2, function(x) mean(x)))
+
+# Bias in p-value with respect to the population p=value
+# population = .5 under null hypothesis
+# apply(p.out, 2, function(x) mean(x - .5))
+#MAR data
+data.frame(mis01 = apply(MAR_p.out01, 2, function(x) mean(x - .5)),
+           mis25 = apply(MAR_p.out25, 2, function(x) mean(x - .5)),
+           mis50 = apply(MAR_p.out50, 2, function(x) mean(x - .5)),
+           mis75 = apply(MAR_p.out75, 2, function(x) mean(x - .5)))
+# Bias in p-value with respect to the sampled complete p=value
+# population = .5 under null hypothesis
+# truth <- p.out$true
+# apply(p.out, 2, function(x) mean(x - truth))
+
+#MAR data bias in p-value with respect to the sampled complete p=value
+MAR_truth01 <- MAR_p.out01$true
+MAR_truth25 <- MAR_p.out25$true
+MAR_truth50 <- MAR_p.out50$true
+MAR_truth75 <- MAR_p.out75$true
+data.frame(mis01 = apply(MAR_p.out01, 2, function(x) mean(x - MAR_truth01)),
+           mis25 = apply(MAR_p.out25, 2, function(x) mean(x - MAR_truth25)),
+           mis50 = apply(MAR_p.out50, 2, function(x) mean(x - MAR_truth50)),
+           mis75 = apply(MAR_p.out75, 2, function(x) mean(x - MAR_truth75)))
+# Bias in p-value with respect to the sampled incomplete p=value
+# population = .5 under null hypothesis
+# mis <- p.out$mis
+# apply(p.out, 2, function(x) mean(x - mis))
+
+#MAR data
+MAR_mis01 <- MAR_p.out01$mis
+MAR_mis25 <- MAR_p.out25$mis
+MAR_mis50 <- MAR_p.out50$mis
+MAR_mis75 <- MAR_p.out75$mis
+data.frame(mis01 = apply(MAR_p.out01, 2, function(x) mean(x - MAR_mis01)),
+           mis25 = apply(MAR_p.out25, 2, function(x) mean(x - MAR_mis25)),
+           mis50 = apply(MAR_p.out50, 2, function(x) mean(x - MAR_mis50)),
+           mis75 = apply(MAR_p.out75, 2, function(x) mean(x - MAR_mis75)))
+
+#MAR data correlations with truth
+cor(MAR_p.out01)[1, ]
+cor(MAR_p.out25)[1, ]
+cor(MAR_p.out50)[1, ]
+cor(MAR_p.out75)[1, ]
+
+# MAR data proportions correct
+MAR_sign01 <- MAR_p.out01 < .05
+MAR_sign25 <- MAR_p.out25 < .05
+MAR_sign50 <- MAR_p.out50 < .05
+MAR_sign75 <- MAR_p.out75 < .05
+
+MAR_p.correct01 <- apply(MAR_sign01, 2, function(x) mean(x == MAR_sign01[, 1]))
+MAR_p.correct25 <- apply(MAR_sign25, 2, function(x) mean(x == MAR_sign25[, 1]))
+MAR_p.correct50 <- apply(MAR_sign50, 2, function(x) mean(x == MAR_sign50[, 1]))
+MAR_p.correct75 <- apply(MAR_sign75, 2, function(x) mean(x == MAR_sign75[, 1]))
