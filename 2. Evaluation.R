@@ -86,7 +86,8 @@ grab.p <- function(x){
              D2 = x$D2$result[4],
              D3 = x$D3$result[4], 
              micombine = x$micomb[2],
-             pbar = x$pbar)
+             pbar = x$pbar, 
+             pmed = x$pmed)
 }
 p.out01 <- mapply(grab.p, EVAL01, SIMPLIFY = FALSE) %>% do.call(rbind, .)
 p.out25 <- mapply(grab.p, EVAL25, SIMPLIFY = FALSE) %>% do.call(rbind, .)
