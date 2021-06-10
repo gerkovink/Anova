@@ -127,13 +127,67 @@ p26 <- qqplot(p.out25$pmed, title = "pmed 25% missing")
 p27 <- qqplot(p.out50$pmed, title = "pmed 50% missing")
 p28 <- qqplot(p.out75$pmed, title = "pmed 75% missing")
 
-grid.arrange(p1, p2, p3, p4, 
+p <- grid.arrange(p1, p2, p3, p4, 
              p5, p6, p7, p8,
              p9, p10, p11, p12, 
              p13, p14, p15, p16, 
              p17, p18, p19, p20,
              p21, p22, p23, p24,
              p25, p26, p27, p28, 
-             nrow = 7, ncol = 4, respect=TRUE, 
+             nrow = 7, ncol = 4, 
              top = "ECDF and theoretical CDF")
 
+pdf(file = "plot_all.pdf", width = 10, height = 20)
+plot(p)
+dev.off()
+
+
+#side by side with limited range
+p1 <- qqplot(p.out01$true, title = "true") + xlim(0, .1) + ylim(0, .1)
+p2 <- qqplot(p.out25$true, title = "true") + xlim(0, .1) + ylim(0, .1)
+p3 <- qqplot(p.out50$true, title = "true") + xlim(0, .1) + ylim(0, .1)
+p4 <- qqplot(p.out75$true, title = "true") + xlim(0, .1) + ylim(0, .1)
+
+p5 <- qqplot(p.out01$mis, title = "CCA 1% missing") + xlim(0, .1) + ylim(0, .1)
+p6 <- qqplot(p.out25$mis, title = "CCA 25% missing") + xlim(0, .1) + ylim(0, .1)
+p7 <- qqplot(p.out50$mis, title = "CCA 50% missing") + xlim(0, .1) + ylim(0, .1)
+p8 <- qqplot(p.out75$mis, title = "CCA 75% missing") + xlim(0, .1) + ylim(0, .1)
+
+p9 <- qqplot(p.out01$D1, title = "D1 1% missing") + xlim(0, .1) + ylim(0, .1)
+p10 <- qqplot(p.out25$D1, title = "D1 25% missing") + xlim(0, .1) + ylim(0, .1)
+p11 <- qqplot(p.out50$D1, title = "D1 50% missing") + xlim(0, .1) + ylim(0, .1)
+p12 <- qqplot(p.out75$D1, title = "D1 75% missing") + xlim(0, .1) + ylim(0, .1)
+
+p13 <- qqplot(p.out01$D2, title = "D2 1% missing") + xlim(0, .1) + ylim(0, .1)
+p14 <- qqplot(p.out25$D2, title = "D2 25% missing") + xlim(0, .1) + ylim(0, .1)
+p15 <- qqplot(p.out50$D2, title = "D2 50% missing") + xlim(0, .1) + ylim(0, .1)
+p16 <- qqplot(p.out75$D2, title = "D2 75% missing") + xlim(0, .1) + ylim(0, .1)
+
+p17 <- qqplot(p.out01$D3, title = "D3 1% missing") + xlim(0, .1) + ylim(0, .1)
+p18 <- qqplot(p.out25$D3, title = "D3 25% missing") + xlim(0, .1) + ylim(0, .1)
+p19 <- qqplot(p.out50$D3, title = "D3 50% missing") + xlim(0, .1) + ylim(0, .1)
+p20 <- qqplot(p.out75$D3, title = "D3 75% missing") + xlim(0, .1) + ylim(0, .1)
+
+p21 <- qqplot(p.out01$pbar, title = "pbar 1% missing") + xlim(0, .1) + ylim(0, .1)
+p22 <- qqplot(p.out25$pbar, title = "pbar 25% missing") + xlim(0, .1) + ylim(0, .1)
+p23 <- qqplot(p.out50$pbar, title = "pbar 50% missing") + xlim(0, .1) + ylim(0, .1)
+p24 <- qqplot(p.out75$pbar, title = "pbar 75% missing") + xlim(0, .1) + ylim(0, .1)
+
+p25 <- qqplot(p.out01$pmed, title = "pmed 1% missing") + xlim(0, .1) + ylim(0, .1)
+p26 <- qqplot(p.out25$pmed, title = "pmed 25% missing") + xlim(0, .1) + ylim(0, .1)
+p27 <- qqplot(p.out50$pmed, title = "pmed 50% missing") + xlim(0, .1) + ylim(0, .1)
+p28 <- qqplot(p.out75$pmed, title = "pmed 75% missing") + xlim(0, .1) + ylim(0, .1)
+
+p <- grid.arrange(p1, p2, p3, p4, 
+                  p5, p6, p7, p8,
+                  p9, p10, p11, p12, 
+                  p13, p14, p15, p16, 
+                  p17, p18, p19, p20,
+                  p21, p22, p23, p24,
+                  p25, p26, p27, p28, 
+                  nrow = 7, ncol = 4, 
+                  top = "ECDF and theoretical CDF between p = 0 and p = .1")
+
+pdf(file = "plot_all_limitedrange.pdf", width = 10, height = 20)
+plot(p)
+dev.off()
